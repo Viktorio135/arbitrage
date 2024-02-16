@@ -35,13 +35,13 @@ class Money:
             print(f"Произошла ошибка для {currencie}: {e}")
 
     async def gather(self):
-        async with aiohttp.ClientSession() as session:
+        async with aiohttp.ClientSession(read_timeout=2, conn_timeout=2) as session:
             await asyncio.gather(*[self.requests_processing(currencie, session) for currencie in self.cryptocurrencies])
 
         await self.saving()
 
     async def saving(self):
-        with open('static/order_book.json', 'w') as file:
+        with open('order_book.json', 'w') as file:
             json.dump(self.data, file)
 
 if __name__ == '__main__':
